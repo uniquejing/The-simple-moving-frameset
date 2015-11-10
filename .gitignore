@@ -1,0 +1,40 @@
+function startChange(obj,json,iFun){
+		
+		clearInterval(obj.timer);
+		
+		var iStop=true;
+		obj.timer=setInterval(function(){
+				for(var iStyle in json){
+					if(iStyle=='opacity'){
+						var cur=parseFloat(getStyle(obj,iStyle))*100;
+					}else{
+						var cur=parseInt(getStyle(obj,iStyle));
+					}
+					
+					var speed=(json[iStyle]-cur)/10;
+					speed=speed>0?Math.ceil(speed):Math.floor(speed);
+					cur+=speed;
+					if(iStyle=='opacity'){
+						obj.style.filter="alpha:(opacity:'+cur+')";
+						obj.style[iStyle]=cur/100;
+					}else{
+						obj.style[iStyle]=cur+"px";
+					}
+					if(cur!=json[iStyle]) iStop=false;
+			  	}//json循环结束;
+				if(iStop){
+					clearInterval(obj.timer);
+					if(iFun==true) iFun();
+				}
+			},30);
+		
+	};
+	//除去offset产生的bug
+	function getStyle(obj,name){
+		if(obj.currentStyle){
+			return obj.currentStyle[name];
+		}else{
+			return getComputedStyle(obj,false)[name];
+		}
+	}
+</script>
